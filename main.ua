@@ -7,18 +7,19 @@ Sqr  ← ±Saw               # ? sample-ct freq
 Tri  ← -⊸¬ ⌵Saw           # ? sample-ct freq
 SPB  ← ⨪÷60               # ? bpm
 Rise ← ⟜(+×÷⟜⇡)           # sample-ct [freq] ? sample-ct range min
+K    ← ≡(÷⊃⧻/+) ⬚0⧈∘      # ? window-size [a]
+Norm ← ÷⊸/↥               # ? [a]
 
 Tempo ← 180
-Base  ← 440
+Base  ← 500
 Qtr   ← ⁅ ×&asr ×0.25 ×SPB Tempo
 Note  ← ×Base ˜ⁿ2÷12
 
-Chord  ← × AR Qtr5 Qtr2 ⊸⧻ ˜÷/+ ⟜⧻ ≡(Tri⊙Note) # ? sample-ct [notes]
-Single ← × AR Qtr0.25 Qtr1 ⊸⧻ Tri ⊙Note        # ? sample-ct note
-Kick   ← × AR 100 100 ⊸⧻ Tri ⊙⇌Rise Qtr2 440 220
-Snare  ← × ˙× AR 100 7500 ⊸⧻ -⊸¬ gen Qtr2 0
+Chord  ← × AR Qtr5 Qtr2 ⊸⧻ ÷⊃⧻/+ ≡(Tri⊙Note)     # ? sample-ct [notes]
+Single ← × AR Qtr0.25 Qtr1 ⊸⧻ Tri ⊙Note          # ? sample-ct note
+Kick   ← × AR 400 400 ⊸⧻ Tri ⊙⇌Rise Qtr2 440 330 # ?
+Snare  ← × ˙× AR 100 7500 ⊸⧻ K 5 -⊸¬ gen Qtr2 0  # ?
 
-# &exit []
 {
   (
     {
@@ -28,26 +29,47 @@ Snare  ← × ˙× AR 100 7500 ⊸⧻ -⊸¬ gen Qtr2 0
       Rest Qtr1
       ÷2 Kick
       ×0.7 Snare
+      ×0.2 Snare
       Rest Qtr4
-      Rest Qtr2
-      # ÷2 Kick
+      # Rest Qtr1
     }
-    ÷8 /◇⊂ ⊂⟜∘ ⊂⟜∘
+
+    ÷2 /◇⊂ ⊂⟜∘ ⊂⟜∘
   )
 
   (
     {
       Single Qtr2 -12 0
       Single Qtr2 -12 4
-      Single Qtr2 -12 7
-      Single Qtr2 -12 4
+      # Single Qtr2 -12 7
+      # Single Qtr2 -12 4
+      Single Qtr4 -12 7
 
       Single Qtr2 -12 ¯ 1
       Single Qtr2 -12 4
       Single Qtr2 -12 10
       Single Qtr2 -12 5
+      # Single Qtr4 -12 10
     }
-    ÷8 /◇⊂ ⊂⟜∘ ⊂⟜∘
+    ⊂⟜∘
+
+    {
+      Single Qtr4 -12 0
+      # Single Qtr4 -12 7
+      Single Qtr2 -12 7
+      Single Qtr2 -12 4
+
+      Single Qtr4 -12 ¯ 1
+      Single Qtr4 -12 10
+
+      # Single Qtr2 -12 10
+      # Single Qtr2 -12 5
+    }
+    ⊂⟜∘
+
+    ˜⊂
+
+    ÷2 /◇⊂
   )
 
   (
@@ -62,11 +84,12 @@ Snare  ← × ˙× AR 100 7500 ⊸⧻ -⊸¬ gen Qtr2 0
       Chord Qtr7.25 [0 4 7 9 ¯7]
       Chord Qtr8.25 [¯1 3 7 9 ¯7]
     }
-    ÷3.75 /◇⊂
-    # ◌
+    /◇⊂
   )
 }
-÷2 ⊂⟜∘ /◇(⬚0+)
+⊂⟜∘ /◇(⬚0+)
+
+Norm
 
 &ap
 &exit []
