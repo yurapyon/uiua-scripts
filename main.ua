@@ -1,24 +1,87 @@
-Fade ← ⬚1˜↙÷⟜⇡            # ? fade-len total-len
-AR   ← ↧ ⊙⇌ ∩Fade ⊙⤙⊙∘    # ? atk rel total-len
-Rest ← ˜↯0                # ? sample-ct
-Sin  ← ∿×π × ÷&asr⇡       # ? sample-ct freq
-Saw  ← -⊸¬ -⊸⌊÷2 × ÷&asr⇡ # ? sample-ct freq
-Sqr  ← ±Saw               # ? sample-ct freq
-Tri  ← -⊸¬ ⌵Saw           # ? sample-ct freq
-SPB  ← ⨪÷60               # ? bpm
-Rise ← ⟜(+×÷⟜⇡)           # sample-ct [freq] ? sample-ct range min
-K    ← ≡(÷⊃⧻/+) ⬚0⧈∘      # ? window-size [a]
-Norm ← ÷⊸/↥               # ? [a]
+# Lines ← ⊜(□↘¯1) ⊸(\+ ↻¯1 =@\n) ˜⊂@\n # [""...] ? ""
+Lines  ← /$"_\n_"
+Shrink ← ↘⊙(↘¯) ⊃⌊⁅÷2 # [a] ? ct [a]
 
-Tempo ← 180
-Base  ← 500
-Qtr   ← ⁅ ×&asr ×0.25 ×SPB Tempo
-Note  ← ×Base ˜ⁿ2÷12
+Fade ← ⬚1˜↙÷⟜⇡               # [a] ? fade-len total-len
+AR   ← ↧ ⊙⇌ ∩Fade ⊙⤙⊙∘       # [a] ? atk rel total-len
+Rest ← ˜↯0                   # [a] ? sample-ct
+Sin  ← ∿×π ×÷&asr⇡           # [a] ? sample-ct freq
+Saw  ← -⊸¬ ◿1÷2 ×÷&asr⇡      # [a] ? sample-ct freq
+Sqr  ← ±Saw                  # [a] ? sample-ct freq
+Tri  ← -⊸¬ ⌵Saw              # [a] ? sample-ct freq
+SPB  ← ⨪÷60                  # n ? bpm
+Rise ← +×÷⟜⇡                 # [freq] ? sample-ct range min
+K    ← Shrink -1 ⟜⬚0⧈(÷⊃⧻/+) # [a] ? sz [a]
+Norm ← ÷⊸/↥                  # [a] ? [a]
 
-Chord  ← × AR Qtr5 Qtr2 ⊸⧻ ÷⊃⧻/+ ≡(Tri⊙Note)     # ? sample-ct [notes]
-Single ← × AR Qtr0.25 Qtr1 ⊸⧻ Tri ⊙Note          # ? sample-ct note
-Kick   ← × AR 400 400 ⊸⧻ Tri ⊙⇌Rise Qtr2 440 330 # ?
-Snare  ← × ˙× AR 100 7500 ⊸⧻ K 5 -⊸¬ gen Qtr2 0  # ?
+Tempo  ← 180                                       # n ?
+Base   ← 261                                       # n ?
+Qtr    ← ⁅ ×&asr ×0.25 ×SPB Tempo                  # n ? n
+Note   ← ×Base ˜ⁿ2÷12                              # n ? n
+Chord  ← × AR Qtr5 Qtr2 ⊸⧻ ÷⊃⧻/+ ≡(Tri⊙Note)       # [a] ? sample-ct [notes]
+Single ← × AR Qtr0.25 Qtr1 ⊸⧻ Tri ⊙Note            # [a] ? sample-ct note
+Kick   ← × AR 400 400 ⊸⧻ Tri ⟜(⇌Rise) Qtr2 440 330 # [a] ?
+Snare  ← × ˙× AR 100 7500 ⊸⧻ K 5 -⊸¬ gen Qtr2 0    # [a] ?
+
+S ← × ˙× AR Qtr0.1 Qtr1.9 ⊸⧻ Sin ⊙Note # [a] ? sample-ct note
+
+Note   ← ⬚0⨂"c d ef g a b"¯⌵
+Sharp  ← ≍@#
+Octave ← ×12-3⬚3⋕
+ParseNote ← |1 ⍣(
+  0 °⊟₀
+| Note °⊟₁
+| +⊓(Note|Octave) °⊟₂
+| ++⊓(Note|Sharp|Octave) °⊟₃
+| ParseNote⊂⊃(↙2|⊣)
+)
+NoteTrack ← (
+  ⍚(⊜ParseNote ⊸≠@\s) °Lines
+  ≡(⍣(Rest Qtr2 °[]|Chord Qtr2)°□)
+  Norm /◇⊂
+)
+
+# ToNotes Track(
+# $ c3 g3 e3 c4
+# $ 
+# $ e3
+# $ 
+# $ g3
+# $ c#3
+# $ 
+# $ c3
+# $ c#3 f3 c#4
+# $     g#3
+# $ f3
+# $ 
+# $ g#3
+# $ d3
+# $ 
+# $ g3
+# )
+
+NoteTrack(
+  $ c4 c3
+  $ c#4
+  $ d4 d3
+  $ 
+  $ a3 a2
+  $ 
+  $ d4 d3
+  $ c#4 c#3
+  $ c4 c3
+  $ c#4
+  $ d4 d3
+  $ 
+  $ a4 a3
+  $ 
+  $ d4 d3
+  $ c#4 c#3
+)
+÷2 ⊂⟜∘ ⊂⟜∘
+
+&ap
+&exit []
 
 {
   (
